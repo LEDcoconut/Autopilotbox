@@ -577,7 +577,7 @@
     </div>
     <div class="stops-editor" id="stopsEditor"></div>
     <button type="button" class="add-stop-btn" id="addStopBtn">+ Add another stop</button>
-    <div class="optimize-toggle active" id="optimizeToggle" role="checkbox" aria-checked="true" tabindex="0">
+    <div class="optimize-toggle" id="optimizeToggle" role="checkbox" aria-checked="false" tabindex="0">
       <div class="switch"></div><span class="label">Let AI pick the most efficient order to visit these stops</span>
     </div>
     <div class="nav-row">
@@ -717,7 +717,7 @@
         <div class="chip" data-v="family">Family-friendly</div>
       </div>
       <div class="prefs-actions">
-        <button class="btn" onclick="generateItinerary()">Regenerate schedule</button>
+        <button class="btn" onclick="generateItinerary()">Generate schedule</button>
       </div>
     </div>
 
@@ -896,7 +896,7 @@ const state = {
   tripType: "roundtrip", // "roundtrip" | "oneway"
   origin: null,
   stops: [],           // ordered array of {name,lat,lon} — the destinations to visit, in visiting order
-  optimizeOrder: true,
+  optimizeOrder: false,
   startDate: null,
   endDate: null,
   weatherByStop: null, // [{stop, weather}]
@@ -943,7 +943,7 @@ document.getElementById("choice-scratch").onclick = ()=>{
 };
 
 function resetTrip(){
-  state.origin=null; state.stops=[]; state.optimizeOrder=true; state.startDate=null; state.endDate=null;
+  state.origin=null; state.stops=[]; state.optimizeOrder=false; state.startDate=null; state.endDate=null;
   state.weatherByStop=null; state.brief=null; state.itinerary=null; state.costEstimate=null; state.mode=null; state.chatHistory=[];
   state.tripType="roundtrip";
   document.querySelectorAll("#tripTypeToggle .chip").forEach(c=>c.classList.toggle("active", c.dataset.trip==="roundtrip"));
@@ -955,8 +955,8 @@ function resetTrip(){
   document.getElementById("costSummary").innerHTML = "";
   document.getElementById("chatMessages").innerHTML = "";
   document.getElementById("originInput").value = "";
-  document.getElementById("optimizeToggle").classList.add("active");
-  document.getElementById("optimizeToggle").setAttribute("aria-checked","true");
+  document.getElementById("optimizeToggle").classList.remove("active");
+  document.getElementById("optimizeToggle").setAttribute("aria-checked","false");
   renderStopsEditor();
   updateGlobePoints();
 }
@@ -1224,7 +1224,7 @@ function renderStopsEditor(){
   editor.innerHTML = state.stops.map((stop,i)=>`
     <div class="stop-row" data-idx="${i}">
       <div class="field">
-        <label>Stop ${i+1}</label>
+        <label>${i===state.stops.length-1 ? "Final destination" : `Stop ${i+1}`}</label>
         <input type="text" class="stop-input" placeholder="Enter city or country name" autocomplete="off" value="${stop ? escapeHtml(stop.name) : ""}">
         <div class="autocomplete stop-auto"></div>
       </div>
