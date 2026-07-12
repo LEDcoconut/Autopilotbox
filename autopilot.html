@@ -66,6 +66,10 @@
   .screen{ display:none; flex:1; flex-direction:column; padding:32px; max-width:1100px; margin:0 auto; width:100%; animation: fadeIn .4s ease; }
   .screen.active{ display:flex; }
   @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  @media (max-width:600px){
+    .screen{ padding:20px 16px; }
+    .screen > h1, .screen > p.sub{ text-align:center; }
+  }
 
   .welcome-logo-wrap{ display:flex; justify-content:center; margin:8px 0 4px; }
   .welcome-logo-img{ width:280px; max-width:70vw; height:auto; animation: logo-float-natural 4.6s cubic-bezier(.45,0,.55,1) infinite; filter: drop-shadow(0 10px 24px rgba(60,45,20,0.1)); }
@@ -114,6 +118,7 @@
   .autocomplete{
     position:absolute; top:100%; left:0; right:0; background:var(--bg2); border:1px solid var(--panel-border);
     border-radius:10px; margin-top:6px; max-height:220px; overflow-y:auto; z-index:30; display:none;
+    overscroll-behavior:contain;
   }
   .autocomplete div{ padding:10px 14px; cursor:pointer; font-size:15px; }
   .autocomplete div:hover{ background:rgba(63,182,177,0.12); }
@@ -357,9 +362,10 @@
   .prefs-panel{ padding:28px; }
   .prefs-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:6px;}
   @media (max-width:800px){ .prefs-row{ grid-template-columns:1fr 1fr; } }
-  @media (max-width:500px){ .prefs-row{ grid-template-columns:1fr; } }
+  @media (max-width:500px){ .prefs-row{ grid-template-columns:1fr; } .prefs-panel{ padding:20px; } }
   .prefs-row .field label{ display:flex; align-items:center; gap:6px; }
-  .prefs-row .field label .icon{ width:15px; height:15px; }
+  .prefs-row .field label .icon{ width:15px; height:15px; flex-shrink:0; }
+  @media (max-width:500px){ .prefs-row .field label{ font-size:12px; letter-spacing:.04em; } }
   .prefs-row .field input, .prefs-row .field select{ font-weight:600; }
   .field-hint{ margin:6px 2px 0; font-size:12.5px; color:var(--text-dim); }
   .field select{ width:100%; padding:12px; border-radius:10px; background:var(--bg2); color:var(--text); border:1px solid var(--panel-border); font-size:15px; }
@@ -421,7 +427,7 @@
 
   /* Chat co-pilot */
   .chat-panel{ margin-top:0; }
-  .chat-messages{ display:flex; flex-direction:column; gap:10px; max-height:320px; overflow-y:auto; margin-bottom:14px; padding-right:4px; }
+  .chat-messages{ display:flex; flex-direction:column; gap:10px; max-height:320px; overflow-y:auto; margin-bottom:14px; padding-right:4px; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
   .chat-msg{ max-width:80%; padding:10px 14px; border-radius:14px; font-size:15px; line-height:1.5; }
   .chat-msg.user{ align-self:flex-end; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:var(--btn-text); border-bottom-right-radius:4px; }
   .chat-msg.ai{ align-self:flex-start; background:var(--bg2); border:1px solid var(--panel-border); color:var(--text); border-bottom-left-radius:4px; }
