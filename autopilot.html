@@ -413,7 +413,14 @@
   .field select{ width:100%; padding:12px; border-radius:10px; background:var(--bg2); color:var(--text); border:1px solid var(--panel-border); font-size:16px; }
   .prefs-divider{ height:1px; background:var(--panel-border); margin:22px 0 18px; }
   .prefs-subhead{ display:block; font-size:12.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
-  .travel-times-details summary.prefs-subhead{ cursor:pointer; margin-bottom:0; user-select:none; }
+  .travel-times-details summary.prefs-subhead{ cursor:pointer; margin-bottom:0; user-select:none; list-style:none; display:flex; align-items:center; gap:6px; }
+  .travel-times-details summary.prefs-subhead::-webkit-details-marker{ display:none; }
+  .travel-times-details summary.prefs-subhead::after{
+    content:""; width:8px; height:8px; flex-shrink:0; margin-left:2px;
+    border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+    transform:rotate(45deg); transition:transform .2s ease;
+  }
+  .travel-times-details[open] summary.prefs-subhead::after{ transform:rotate(-135deg); }
   .travel-times-details summary.prefs-subhead:hover{ color:var(--accent); }
   .travel-times-details[open] summary.prefs-subhead{ margin-bottom:0; }
   .prefs-actions{ margin-top:22px; padding-top:18px; border-top:1px solid var(--panel-border); text-align:right; }
