@@ -29,22 +29,28 @@
     --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
   *{box-sizing:border-box;}
-  html,body{height:100%;}
+  html,body{height:100%; overscroll-behavior-y:none;}
   body{
     margin:0;
     font-family: var(--font-body);
     background: var(--bg);
     color: var(--text);
     min-height:100vh;
+    min-height:100svh;
     overflow-x:hidden;
   }
-  #app{ min-height:100vh; display:flex; flex-direction:column; position:relative; z-index:1; }
+  #app{ min-height:100vh; min-height:100svh; display:flex; flex-direction:column; position:relative; z-index:1; }
 
   /* Illustrated beach — fixed behind the whole app, image set via JS from BEACH_BG_DATA_URI */
   .beach-bg{
     position:fixed; inset:0; z-index:-1; overflow:hidden; background:var(--bg);
     background-size:cover; background-position:center center; background-repeat:no-repeat;
     filter:brightness(0.88);
+    /* promotes this to its own GPU layer so it doesn't lag/judder behind scrolling
+       content on mobile WebKit — a well-known fixed-background performance issue */
+    transform:translateZ(0);
+    -webkit-transform:translateZ(0);
+    will-change:transform;
   }
 
   header.topbar{
@@ -199,7 +205,7 @@
 
   /* The entry screens share the quiet, spacious travel-planner presentation. */
   #screen-welcome.active{
-    max-width:none; min-height:calc(100vh - 63px); padding:clamp(28px,5vh,60px) 28px 32px;
+    max-width:none; min-height:calc(100vh - 63px); min-height:calc(100svh - 63px); padding:clamp(28px,5vh,60px) 28px 32px;
     justify-content:center; align-items:center; text-align:center; position:relative; overflow:hidden;
     background:transparent;
   }
@@ -236,7 +242,7 @@
   }
 
   #screen-loading.active{
-    max-width:none; min-height:calc(100vh - 63px); padding:0; overflow:hidden;
+    max-width:none; min-height:calc(100vh - 63px); min-height:calc(100svh - 63px); padding:0; overflow:hidden;
     position:relative; background:transparent;
   }
   #screen-loading.active::before{
@@ -381,8 +387,24 @@
     padding:26px 28px; box-shadow:var(--card-shadow);
   }
   .timeline:empty{ display:none; }
+  .day-tabs{ display:none; }
   .day-block{ margin-bottom:26px; }
   .day-title{ font-family:var(--font-display); font-weight:600; font-size:19px; margin-bottom:14px; color:var(--accent); }
+
+  @media (max-width:700px){
+    .day-tabs{
+      display:flex; gap:8px; overflow-x:auto; margin:-4px -4px 18px; padding:4px 4px 12px;
+      border-bottom:1px solid var(--panel-border); -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    }
+    .day-tabs::-webkit-scrollbar{ display:none; }
+    .day-tab{
+      flex:0 0 auto; padding:9px 18px; border-radius:20px; border:1px solid var(--panel-border);
+      background:var(--bg2); color:var(--text-dim); font-size:14px; font-weight:700; cursor:pointer; white-space:nowrap;
+    }
+    .day-tab.active{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:var(--btn-text); border-color:transparent; }
+    .day-block{ display:none; }
+    .day-block.active-day{ display:block; }
+  }
   .activity{ display:flex; gap:14px; padding:13px 0; border-left:2px solid var(--panel-border); padding-left:18px; margin-left:6px; position:relative; }
   .activity::before{ content:""; position:absolute; left:-6px; top:18px; width:10px; height:10px; border-radius:50%; background:var(--accent); }
   .activity .time{ color:var(--text); background:var(--bg2); border:1px solid var(--panel-border); border-radius:6px; padding:2px 7px; font-size:13px; font-weight:700; min-width:56px; text-align:center; height:fit-content; }
@@ -431,6 +453,18 @@
   .icon-sm{ width:18px; height:18px; color:var(--accent); }
   .icon-lg{ width:32px; height:32px; color:var(--accent); margin-bottom:14px; }
   .icon-swap{ width:20px; height:20px; color:var(--accent); }
+
+  /* Touch devices have no real cursor, so a :hover transform can get "stuck" after a tap
+     instead of releasing on mouseout — this reads as cards/buttons jumping around while
+     scrolling. Disable hover-triggered movement wherever there's no real pointer. */
+  @media (hover:none){
+    .choice-card:hover, .card:hover, .attraction-card:hover, .vc-photo:hover,
+    .btn:hover, .btn.secondary:hover, .chip:hover,
+    .calendar-panel .flatpickr-day:hover, .calendar-panel .flatpickr-prev-month:hover,
+    .calendar-panel .flatpickr-next-month:hover{
+      transform:none !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1641,8 +1675,12 @@ Respond with JSON only.`;
 }
 
 function renderTimeline(){
-  document.getElementById("timelineOutput").innerHTML = state.itinerary.map(d=>`
-    <div class="day-block">
+  const tabs = state.itinerary.map((d,i)=>`
+    <button class="day-tab${i===0 ? " active" : ""}" data-day-index="${i}">Day ${d.day}</button>
+  `).join("");
+
+  const days = state.itinerary.map((d,i)=>`
+    <div class="day-block${i===0 ? " active-day" : ""}" data-day-index="${i}">
       <div class="day-title">Day ${d.day} — ${d.date} · ${d.title}</div>
       ${d.activities.map(a=>`
         <div class="activity">
@@ -1655,7 +1693,20 @@ function renderTimeline(){
       `).join("")}
     </div>
   `).join("");
+
+  document.getElementById("timelineOutput").innerHTML = `<div class="day-tabs">${tabs}</div>${days}`;
 }
+
+// day tabs only switch the visible day on mobile (see the .day-tabs media query) —
+// on wider screens all days stay visible and this listener is a harmless no-op
+document.getElementById("timelineOutput").addEventListener("click", (e)=>{
+  const tab = e.target.closest(".day-tab");
+  if(!tab) return;
+  const idx = tab.dataset.dayIndex;
+  document.querySelectorAll("#timelineOutput .day-tab").forEach(t=>t.classList.toggle("active", t===tab));
+  document.querySelectorAll("#timelineOutput .day-block").forEach(b=>b.classList.toggle("active-day", b.dataset.dayIndex===idx));
+  tab.scrollIntoView({ inline:"center", block:"nearest", behavior:"smooth" });
+});
 
 const DOLLAR_ICON = `<span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>`;
 
