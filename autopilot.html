@@ -413,6 +413,9 @@
   .field select{ width:100%; padding:12px; border-radius:10px; background:var(--bg2); color:var(--text); border:1px solid var(--panel-border); font-size:16px; }
   .prefs-divider{ height:1px; background:var(--panel-border); margin:22px 0 18px; }
   .prefs-subhead{ display:block; font-size:12.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
+  .travel-times-details summary.prefs-subhead{ cursor:pointer; margin-bottom:0; user-select:none; }
+  .travel-times-details summary.prefs-subhead:hover{ color:var(--accent); }
+  .travel-times-details[open] summary.prefs-subhead{ margin-bottom:0; }
   .prefs-actions{ margin-top:22px; padding-top:18px; border-top:1px solid var(--panel-border); text-align:right; }
   .chips{ display:flex; flex-wrap:wrap; gap:8px; }
   .chip{ padding:8px 16px; border-radius:20px; border:1px solid var(--panel-border); background:var(--bg2); font-size:15px; font-weight:500; cursor:pointer; color:var(--text-dim); transition:.2s; }
@@ -685,27 +688,7 @@
         </div>
       </div>
       <div class="prefs-divider"></div>
-      <label class="prefs-subhead">Travel times (optional — used instead of guessing)</label>
-      <div class="prefs-row">
-        <div class="field">
-          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></span>Outbound arrival</label>
-          <input type="time" id="prefArrivalTime">
-        </div>
-        <div class="field">
-          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></span>Return departure</label>
-          <input type="time" id="prefDepartureTime">
-        </div>
-        <div class="field">
-          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><rect x="9.5" y="16" width="5" height="5"/></svg></span>Hotel check-in</label>
-          <input type="time" id="prefCheckinTime">
-        </div>
-        <div class="field">
-          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><rect x="9.5" y="16" width="5" height="5"/></svg></span>Hotel check-out</label>
-          <input type="time" id="prefCheckoutTime">
-        </div>
-      </div>
-      <div class="prefs-divider"></div>
-      <label class="prefs-subhead">Interests</label>
+      <label class="prefs-subhead">Interests <span style="text-transform:none;font-weight:500;">(pick at least 2)</span></label>
       <div class="chips" id="interestChips">
         <div class="chip" data-v="adventure">Adventure</div>
         <div class="chip" data-v="relaxation">Relaxation</div>
@@ -716,7 +699,30 @@
         <div class="chip" data-v="shopping">Shopping</div>
         <div class="chip" data-v="family">Family-friendly</div>
       </div>
+      <div class="prefs-divider"></div>
+      <details class="travel-times-details">
+        <summary class="prefs-subhead">Travel times (optional — used instead of guessing)</summary>
+        <div class="prefs-row" style="margin-top:14px;">
+          <div class="field">
+            <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></span>Outbound arrival</label>
+            <input type="time" id="prefArrivalTime">
+          </div>
+          <div class="field">
+            <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></span>Return departure</label>
+            <input type="time" id="prefDepartureTime">
+          </div>
+          <div class="field">
+            <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><rect x="9.5" y="16" width="5" height="5"/></svg></span>Hotel check-in</label>
+            <input type="time" id="prefCheckinTime">
+          </div>
+          <div class="field">
+            <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><rect x="9.5" y="16" width="5" height="5"/></svg></span>Hotel check-out</label>
+            <input type="time" id="prefCheckoutTime">
+          </div>
+        </div>
+      </details>
       <div class="prefs-actions">
+        <p class="field-hint" id="prefsErrorHint" style="display:none;color:var(--danger);text-align:right;margin-bottom:10px;"></p>
         <button class="btn" onclick="generateItinerary()">Generate schedule</button>
       </div>
     </div>
@@ -757,7 +763,7 @@
     <h1>Trip <span>map</span></h1>
     <p class="sub">Every stop in your schedule, in visiting order. Click a stop for directions.</p>
     <div class="map-embed-wrap">
-      <div id="mapGlobeViz" style="width:100%;height:100%;"></div>
+      <iframe class="map-embed" id="mapPreviewFinal" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
     <div class="stops-list" id="stopsList"></div>
     <div class="nav-row">
@@ -1673,8 +1679,8 @@ function buildMapSearchUrl(placeName, lat, lon, cityHint){
 }
 const SHIELD_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5z"/><polyline points="9 12 11 14 15 10"/></svg>`;
 
-function buildFlightSearchUrl(fromName, toName){
-  const q = `Flights from ${fromName.split(",")[0]} to ${toName.split(",")[0]} around ${state.startDate}`;
+function buildFlightSearchUrl(fromName, toName, airline){
+  const q = `${airline ? airline + " " : ""}flights from ${fromName.split(",")[0]} to ${toName.split(",")[0]} around ${state.startDate}`;
   return `https://www.google.com/travel/flights?q=${encodeURIComponent(q)}`;
 }
 function buildHotelSearchUrl(hotelName, city){
@@ -1702,7 +1708,6 @@ function renderFlights(){
       sortState.flights==="asc" ? a.price_estimate_usd - b.price_estimate_usd : b.price_estimate_usd - a.price_estimate_usd
     );
     if(!items.length) return "";
-    const searchUrl = buildFlightSearchUrl(leg.from, leg.to);
     return `
     <div class="leg-block">
       <div class="leg-subhead">${escapeHtml(leg.from)} → ${escapeHtml(leg.to)}</div>
@@ -1714,7 +1719,7 @@ function renderFlights(){
           </div>
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
             ${f.deal_rating ? `<span class="deal-badge ${dealBadgeClass(f.deal_rating)}">${f.deal_rating}</span>` : ""}
-            <a class="trust-link" href="${searchUrl}" target="_blank" rel="noopener">${SHIELD_ICON} Compare real prices on Google Flights ${EXTERNAL_ICON}</a>
+            <a class="trust-link" href="${buildFlightSearchUrl(leg.from, leg.to, f.airline)}" target="_blank" rel="noopener">${SHIELD_ICON} Find this flight on Google Flights ${EXTERNAL_ICON}</a>
           </div>
         </div>`).join("")}
     </div>`;
@@ -1837,7 +1842,30 @@ document.getElementById("tripTypeToggle").addEventListener("click",(e)=>{
   document.querySelectorAll("#tripTypeToggle .chip").forEach(c=>c.classList.toggle("active", c===chip));
 });
 
+function validatePrefsForm(){
+  const budget = Number(document.getElementById("prefBudget").value);
+  const travelers = Number(document.getElementById("prefTravelers").value);
+  const age = Number(document.getElementById("prefAge").value);
+  const interestCount = document.querySelectorAll("#interestChips .chip.active").length;
+
+  const missing = [];
+  if(!budget || budget <= 0) missing.push("a budget above $0");
+  if(!travelers || travelers <= 0) missing.push("at least 1 traveler");
+  if(!age || age <= 0) missing.push("an average age above 0");
+  if(interestCount < 2) missing.push("at least 2 interests");
+
+  const hint = document.getElementById("prefsErrorHint");
+  if(missing.length){
+    hint.textContent = "Please add " + missing.join(", ") + " before generating a schedule.";
+    hint.style.display = "block";
+    return false;
+  }
+  hint.style.display = "none";
+  return true;
+}
+
 async function generateItinerary(){
+  if(!validatePrefsForm()) return;
   state.prefs.budget = Number(document.getElementById("prefBudget").value);
   state.prefs.travelers = Math.max(1, Number(document.getElementById("prefTravelers").value) || 1);
   state.prefs.age = Number(document.getElementById("prefAge").value);
@@ -2064,59 +2092,16 @@ Respond with the full updated schedule as JSON only.`;
 }
 
 /* ============================================================
-   TRIP MAP (reuses the same 3D globe as the stop picker, now
-   drawing the full multi-city route instead of a single pin)
+   TRIP MAP (Google Maps embed — no API key needed. Uses the legacy
+   directions embed, which supports multiple waypoints via "+to:"
+   chaining, so every stop shows as a real pin on a real map.)
    ============================================================ */
-let mapGlobeInstance = null;
-async function renderMapGlobe(){
-  const container = document.getElementById("mapGlobeViz");
-  try{
-    await ensureGlobeLib();
-    if(typeof Globe === "undefined") throw new Error("globe.gl failed to load from any CDN");
-    if(!mapGlobeInstance){
-      mapGlobeInstance = Globe()
-        (container)
-        .width(container.clientWidth)
-        .height(container.clientHeight)
-        .globeImageUrl("https://unpkg.com/three-globe@2.31.1/example/img/earth-blue-marble.jpg")
-        .bumpImageUrl("https://unpkg.com/three-globe@2.31.1/example/img/earth-topology.png")
-        .backgroundImageUrl("https://unpkg.com/three-globe@2.31.1/example/img/night-sky.png")
-        .backgroundColor("#01030c")
-        .atmosphereColor("#6fd8d2")
-        .atmosphereAltitude("0.28")
-        .pointColor(()=>"#F6DBA0")
-        .pointAltitude(0.02)
-        .pointRadius(0.45)
-        .arcColor(()=>["#5FE3DD","#EFC98A"])
-        .arcStroke(0.6)
-        .arcAltitude(ARC_ALTITUDE)
-        .arcAltitudeAutoScale(false)
-        .arcDashLength(0.4)
-        .arcDashGap(0.15)
-        .arcDashAnimateTime(1600);
-      mapGlobeInstance.controls().autoRotate = true;
-      mapGlobeInstance.controls().autoRotateSpeed = 0.4;
-      mapGlobeInstance.controls().enableZoom = true;
-      window.addEventListener("resize", ()=>{
-        if(!mapGlobeInstance) return;
-        mapGlobeInstance.width(container.clientWidth).height(container.clientHeight);
-      });
-    } else {
-      mapGlobeInstance.width(container.clientWidth).height(container.clientHeight);
-    }
-    const route = tripRoute();
-    mapGlobeInstance.pointsData(route.map(p=>({ lat:p.lat, lng:p.lon, label:p.name })));
-    const arcs = [];
-    for(let i=0;i<route.length-1;i++){
-      arcs.push({ startLat:route[i].lat, startLng:route[i].lon, endLat:route[i+1].lat, endLng:route[i+1].lon });
-    }
-    mapGlobeInstance.arcsData(arcs);
-    const mid = route[Math.floor((route.length-1)/2)];
-    if(mid) mapGlobeInstance.pointOfView({ lat:mid.lat, lng:mid.lon, altitude:2.2 }, 800);
-  }catch(err){
-    console.error("Map globe failed to initialize:", err);
-    container.innerHTML = `<div class="error-box" style="margin:20px;">3D map couldn't load (${err.message}). Check your internet connection — the stop list below still works.</div>`;
-  }
+function buildTripMapEmbedUrl(){
+  const route = tripRoute();
+  if(route.length < 2) return "";
+  const saddr = `${route[0].lat},${route[0].lon}`;
+  const daddr = route.slice(1).map(p=>`${p.lat},${p.lon}`).join("+to:");
+  return `https://www.google.com/maps?saddr=${saddr}&daddr=${daddr}&output=embed`;
 }
 
 async function renderMapScreen(){
@@ -2125,7 +2110,7 @@ async function renderMapScreen(){
     container.innerHTML = `<div class="error-box">No schedule yet — go back and generate one first.</div>`;
     return;
   }
-  await renderMapGlobe();
+  document.getElementById("mapPreviewFinal").src = buildTripMapEmbedUrl();
 
   const stopsByName = new Map([state.origin, ...state.stops].map(s=>[s.name, s]));
   let n = 1;
