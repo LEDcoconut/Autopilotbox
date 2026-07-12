@@ -111,7 +111,7 @@
   .field label{ display:block; font-size:15px; color:var(--text-dim); margin-bottom:6px; text-transform:uppercase; letter-spacing:.06em; }
   .field input{
     width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--panel-border);
-    background:var(--bg2); color:var(--text); font-size:15px; outline:none; transition:.2s;
+    background:var(--bg2); color:var(--text); font-size:16px; outline:none; transition:.2s;
   }
   .field input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(63,182,177,0.14); }
   .swap{ font-size:20px; color:var(--accent); padding-bottom:10px; text-align:center; }
@@ -122,6 +122,38 @@
   }
   .autocomplete div{ padding:10px 14px; cursor:pointer; font-size:15px; }
   .autocomplete div:hover{ background:rgba(63,182,177,0.12); }
+
+  .stops-editor{ display:flex; flex-direction:column; gap:16px; margin:20px 0; }
+  .stop-row{ display:flex; gap:10px; align-items:flex-start; }
+  .stop-row .field{ flex:1; }
+  .stop-row-controls{ display:flex; gap:6px; padding-top:29px; flex-shrink:0; }
+  .icon-btn{
+    width:38px; height:44px; border-radius:10px; border:1px solid var(--panel-border);
+    background:var(--bg2); color:var(--text-dim); cursor:pointer; font-size:16px; line-height:1;
+    display:flex; align-items:center; justify-content:center; transition:.2s;
+  }
+  .icon-btn:hover:not(:disabled){ border-color:var(--accent); color:var(--accent); background:rgba(63,182,177,0.08); }
+  .icon-btn:disabled{ opacity:.35; cursor:not-allowed; }
+  .icon-btn.remove:hover:not(:disabled){ border-color:var(--danger); color:var(--danger); background:rgba(217,72,58,0.08); }
+  .add-stop-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    padding:13px; border-radius:10px; border:1.5px dashed var(--panel-border); background:transparent;
+    color:var(--text-dim); font-weight:700; font-size:15px; cursor:pointer; transition:.2s;
+  }
+  .add-stop-btn:hover:not(:disabled){ border-color:var(--accent); color:var(--accent); background:rgba(63,182,177,0.06); }
+  .add-stop-btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .optimize-toggle{ display:flex; align-items:center; gap:10px; margin-top:16px; cursor:pointer; user-select:none; }
+  .optimize-toggle .switch{
+    width:38px; height:22px; border-radius:20px; background:var(--panel-border); position:relative; transition:.2s; flex-shrink:0;
+  }
+  .optimize-toggle .switch::after{
+    content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%;
+    background:#fff; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2);
+  }
+  .optimize-toggle.active .switch{ background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+  .optimize-toggle.active .switch::after{ transform:translateX(16px); }
+  .optimize-toggle span.label{ font-size:15px; color:var(--text-dim); font-weight:500; }
+  .optimize-toggle.active span.label{ color:var(--text); font-weight:600; }
 
   .btn{
     background:linear-gradient(135deg,var(--accent),var(--accent2)); color:var(--btn-text); border:none;
@@ -286,7 +318,7 @@
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
     background:var(--panel); border:1px solid var(--panel-border); border-radius:18px;
     padding:56px 24px; box-shadow:var(--card-shadow); text-align:center;
-    max-width:420px; margin:0 auto;
+    max-width:420px; margin:24px auto;
   }
   .timeline-loading-icon{ width:52px; height:52px; }
   .timeline-loading span{ font-size:17px; font-weight:600; color:var(--text); }
@@ -359,6 +391,16 @@
 
   .section-title{ font-size:15px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin:26px 0 12px; }
 
+  .stop-block + .stop-block{ margin-top:24px; padding-top:20px; border-top:1px solid var(--panel-border); }
+  .stop-subhead{
+    display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:600;
+    font-size:17px; color:var(--accent); margin:0 0 12px;
+  }
+  .stop-subhead .icon{ width:16px; height:16px; flex-shrink:0; }
+  .leg-block + .leg-block{ margin-top:20px; padding-top:18px; border-top:1px solid var(--panel-border); }
+  .leg-subhead{ font-weight:700; font-size:15px; color:var(--text); margin:0 0 10px; display:flex; align-items:center; gap:6px; }
+  .route-order-note{ color:var(--text-dim); font-size:14px; margin:-4px 0 16px; font-style:italic; }
+
   .prefs-panel{ padding:28px; }
   .prefs-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:6px;}
   @media (max-width:800px){ .prefs-row{ grid-template-columns:1fr 1fr; } }
@@ -368,7 +410,7 @@
   @media (max-width:500px){ .prefs-row .field label{ font-size:12px; letter-spacing:.04em; } }
   .prefs-row .field input, .prefs-row .field select{ font-weight:600; }
   .field-hint{ margin:6px 2px 0; font-size:12.5px; color:var(--text-dim); }
-  .field select{ width:100%; padding:12px; border-radius:10px; background:var(--bg2); color:var(--text); border:1px solid var(--panel-border); font-size:15px; }
+  .field select{ width:100%; padding:12px; border-radius:10px; background:var(--bg2); color:var(--text); border:1px solid var(--panel-border); font-size:16px; }
   .prefs-divider{ height:1px; background:var(--panel-border); margin:22px 0 18px; }
   .prefs-subhead{ display:block; font-size:12.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
   .prefs-actions{ margin-top:22px; padding-top:18px; border-top:1px solid var(--panel-border); text-align:right; }
@@ -434,7 +476,7 @@
   .chat-msg.error{ align-self:flex-start; background:rgba(217,72,58,0.08); border:1px solid var(--danger); color:#A6301F; }
   .chat-msg.thinking{ align-self:flex-start; color:var(--text-dim); font-style:italic; display:flex; align-items:center; }
   .chat-input-row{ display:flex; gap:10px; }
-  .chat-input-row input{ flex:1; padding:12px 14px; border-radius:10px; border:1px solid var(--panel-border); background:var(--bg2); color:var(--text); font-size:15px; outline:none; }
+  .chat-input-row input{ flex:1; padding:12px 14px; border-radius:10px; border:1px solid var(--panel-border); background:var(--bg2); color:var(--text); font-size:16px; outline:none; }
   .chat-input-row input:focus{ border-color:var(--accent); }
 
   /* Map screen stops */
@@ -522,24 +564,21 @@
   <!-- ORIGIN / DESTINATION -->
   <section class="screen" id="screen-globe">
     <h1>Where are we <span>going</span>?</h1>
-    <p class="sub">Search a city for your origin and destination — watch the flight path appear on the globe.</p>
+    <p class="sub">Search your origin, then add every stop on the trip — watch the route appear on the globe.</p>
     <div class="chips trip-type-toggle" id="tripTypeToggle" role="group" aria-label="Trip type">
       <div class="chip active" data-trip="roundtrip">Round trip</div>
       <div class="chip" data-trip="oneway">One-way</div>
     </div>
     <div id="globeViz"></div>
-    <div class="search-row">
-      <div class="field">
-        <label>From</label>
-        <input type="text" id="originInput" placeholder="Enter city or country name" autocomplete="off">
-        <div class="autocomplete" id="originAuto"></div>
-      </div>
-      <div class="swap"><div class="icon icon-swap" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="18" y2="8"/><polyline points="14 4 18 8 14 12"/><line x1="21" y1="16" x2="6" y2="16"/><polyline points="10 12 6 16 10 20"/></svg></div></div>
-      <div class="field">
-        <label>To</label>
-        <input type="text" id="destInput" placeholder="Enter city or country name" autocomplete="off">
-        <div class="autocomplete" id="destAuto"></div>
-      </div>
+    <div class="field" style="margin:20px 0;">
+      <label>From</label>
+      <input type="text" id="originInput" placeholder="Enter city or country name" autocomplete="off">
+      <div class="autocomplete" id="originAuto"></div>
+    </div>
+    <div class="stops-editor" id="stopsEditor"></div>
+    <button type="button" class="add-stop-btn" id="addStopBtn">+ Add another stop</button>
+    <div class="optimize-toggle active" id="optimizeToggle" role="checkbox" aria-checked="true" tabindex="0">
+      <div class="switch"></div><span class="label">Let AI pick the most efficient order to visit these stops</span>
     </div>
     <div class="nav-row">
       <button class="btn secondary" onclick="goTo('welcome')">Back</button>
@@ -582,6 +621,7 @@
   <section class="screen" id="screen-results">
     <h1>Your trip <span>brief</span></h1>
     <p class="sub" id="resultsSub"></p>
+    <p class="route-order-note" id="routeOrderNote"></p>
 
     <div class="cards-grid">
       <div class="card full">
@@ -645,6 +685,26 @@
         </div>
       </div>
       <div class="prefs-divider"></div>
+      <label class="prefs-subhead">Travel times (optional — used instead of guessing)</label>
+      <div class="prefs-row">
+        <div class="field">
+          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></span>Outbound arrival</label>
+          <input type="time" id="prefArrivalTime">
+        </div>
+        <div class="field">
+          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></span>Return departure</label>
+          <input type="time" id="prefDepartureTime">
+        </div>
+        <div class="field">
+          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><rect x="9.5" y="16" width="5" height="5"/></svg></span>Hotel check-in</label>
+          <input type="time" id="prefCheckinTime">
+        </div>
+        <div class="field">
+          <label><span class="icon icon-sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><rect x="9.5" y="16" width="5" height="5"/></svg></span>Hotel check-out</label>
+          <input type="time" id="prefCheckoutTime">
+        </div>
+      </div>
+      <div class="prefs-divider"></div>
       <label class="prefs-subhead">Interests</label>
       <div class="chips" id="interestChips">
         <div class="chip" data-v="adventure">Adventure</div>
@@ -697,7 +757,7 @@
     <h1>Trip <span>map</span></h1>
     <p class="sub">Every stop in your schedule, in visiting order. Click a stop for directions.</p>
     <div class="map-embed-wrap">
-      <iframe class="map-embed" id="mapPreviewFinal" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div id="mapGlobeViz" style="width:100%;height:100%;"></div>
     </div>
     <div class="stops-list" id="stopsList"></div>
     <div class="nav-row">
@@ -835,14 +895,15 @@ const state = {
   mode: null,
   tripType: "roundtrip", // "roundtrip" | "oneway"
   origin: null,
-  destination: null,
+  stops: [],           // ordered array of {name,lat,lon} — the destinations to visit, in visiting order
+  optimizeOrder: true,
   startDate: null,
   endDate: null,
-  weather: null,
-  brief: null,        // { flights, hotels, attractions, packing }
+  weatherByStop: null, // [{stop, weather}]
+  brief: null,        // { legs, stops:[{name,attractions,hotels}], packing }
   itinerary: null,     // [{day,date,title,activities:[...]}]
   costEstimate: null,  // { total, breakdown }
-  prefs: { budget: 2000, travelers: 1, age: 30, pace: "balanced", interests: ["culture","food"] },
+  prefs: { budget: 2000, travelers: 1, age: 30, pace: "balanced", interests: ["culture","food"], arrivalTime: "", departureTime: "", checkinTime: "", checkoutTime: "" },
   chatHistory: []      // [{role:"user"|"assistant", content}]
 };
 
@@ -882,8 +943,8 @@ document.getElementById("choice-scratch").onclick = ()=>{
 };
 
 function resetTrip(){
-  state.origin=null; state.destination=null; state.startDate=null; state.endDate=null;
-  state.weather=null; state.brief=null; state.itinerary=null; state.costEstimate=null; state.mode=null; state.chatHistory=[];
+  state.origin=null; state.stops=[]; state.optimizeOrder=true; state.startDate=null; state.endDate=null;
+  state.weatherByStop=null; state.brief=null; state.itinerary=null; state.costEstimate=null; state.mode=null; state.chatHistory=[];
   state.tripType="roundtrip";
   document.querySelectorAll("#tripTypeToggle .chip").forEach(c=>c.classList.toggle("active", c.dataset.trip==="roundtrip"));
   budgetUserEdited = false;
@@ -894,7 +955,9 @@ function resetTrip(){
   document.getElementById("costSummary").innerHTML = "";
   document.getElementById("chatMessages").innerHTML = "";
   document.getElementById("originInput").value = "";
-  document.getElementById("destInput").value = "";
+  document.getElementById("optimizeToggle").classList.add("active");
+  document.getElementById("optimizeToggle").setAttribute("aria-checked","true");
+  renderStopsEditor();
   updateGlobePoints();
 }
 
@@ -915,9 +978,7 @@ async function geocode(query){
   }));
 }
 
-function wireAutocomplete(inputId, autoId, onSelect){
-  const input = document.getElementById(inputId);
-  const auto = document.getElementById(autoId);
+function attachAutocomplete(input, auto, onSelect){
   let timer;
   input.addEventListener("input", ()=>{
     clearTimeout(timer);
@@ -940,6 +1001,9 @@ function wireAutocomplete(inputId, autoId, onSelect){
   document.addEventListener("click", (e)=>{
     if(e.target!==input) auto.style.display="none";
   });
+}
+function wireAutocomplete(inputId, autoId, onSelect){
+  attachAutocomplete(document.getElementById(inputId), document.getElementById(autoId), onSelect);
 }
 
 /* ============================================================
@@ -1030,18 +1094,25 @@ function stopPlaneAnimation(){
   if(planeSprite && globeInstance){ globeInstance.scene().remove(planeSprite); planeSprite = null; }
 }
 
-function startPlaneAnimation(origin, destination){
+function startPlaneAnimation(route){
   stopPlaneAnimation();
-  if(!globeInstance || typeof THREE==="undefined") return;
+  if(!globeInstance || typeof THREE==="undefined" || route.length<2) return;
   planeSprite = createPlaneSprite();
   globeInstance.scene().add(planeSprite);
   planeStart = performance.now();
+  const legs = route.length - 1;
   const step = (now)=>{
     if(!planeSprite || !globeInstance) return;
-    const t = ((now - planeStart) % PLANE_DURATION_MS) / PLANE_DURATION_MS;
+    const cycleMs = PLANE_DURATION_MS * legs;
+    const cycle = ((now - planeStart) % cycleMs) / cycleMs;
+    const legFloat = cycle * legs;
+    const legIdx = Math.min(Math.max(Math.floor(legFloat), 0), legs - 1);
+    const t = legFloat - legIdx;
     const tAhead = Math.min(t + 0.006, 0.999);
-    const p1 = greatCircleInterpolate(origin.lat, origin.lon, destination.lat, destination.lon, t);
-    const p2 = greatCircleInterpolate(origin.lat, origin.lon, destination.lat, destination.lon, tAhead);
+    const from = route[legIdx], to = route[legIdx+1];
+    if(!from || !to){ planeAnimId = requestAnimationFrame(step); return; }
+    const p1 = greatCircleInterpolate(from.lat, from.lon, to.lat, to.lon, t);
+    const p2 = greatCircleInterpolate(from.lat, from.lon, to.lat, to.lon, tAhead);
     const alt1 = ARC_ALTITUDE * Math.sin(t * Math.PI) + 0.01;
     const alt2 = ARC_ALTITUDE * Math.sin(tAhead * Math.PI) + 0.01;
     const c1 = globeInstance.getCoords(p1.lat, p1.lng, alt1);
@@ -1104,34 +1175,113 @@ async function initGlobeIfNeeded(){
   }
 }
 
+function tripRoute(){
+  const validStops = state.stops.filter(s=>s);
+  const route = [];
+  if(state.origin) route.push(state.origin);
+  route.push(...validStops);
+  if(state.origin && state.tripType==="roundtrip" && validStops.length) route.push(state.origin);
+  return route;
+}
+
 function updateGlobePoints(){
   if(!globeInstance) return;
-  const pts = [];
-  if(state.origin) pts.push({ lat: state.origin.lat, lng: state.origin.lon, label: state.origin.name });
-  if(state.destination) pts.push({ lat: state.destination.lat, lng: state.destination.lon, label: state.destination.name });
+  const route = tripRoute();
+  const seen = new Set();
+  const pts = route.filter(p=>{
+    const key = `${p.lat},${p.lon}`;
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).map(p=>({ lat: p.lat, lng: p.lon, label: p.name }));
   globeInstance.pointsData(pts);
 
-  if(state.origin && state.destination){
-    const base = { startLat: state.origin.lat, startLng: state.origin.lon, endLat: state.destination.lat, endLng: state.destination.lon };
-    globeInstance.arcsData([ { ...base, glow:true }, { ...base, glow:false } ]);
-    startPlaneAnimation(state.origin, state.destination);
+  if(route.length>1){
+    const arcs = [];
+    for(let i=0;i<route.length-1;i++){
+      const base = { startLat: route[i].lat, startLng: route[i].lon, endLat: route[i+1].lat, endLng: route[i+1].lon };
+      arcs.push({ ...base, glow:true }, { ...base, glow:false });
+    }
+    globeInstance.arcsData(arcs);
+    startPlaneAnimation(route);
   } else {
     globeInstance.arcsData([]);
     stopPlaneAnimation();
   }
 
-  const focus = state.destination || state.origin;
+  const focus = state.stops[state.stops.length-1] || state.origin;
   if(focus) globeInstance.pointOfView({ lat: focus.lat, lng: focus.lon, altitude: 1.6 }, 1200);
 }
 
 wireAutocomplete("originInput","originAuto",(r)=>{
   state.origin = r; updateGlobePoints(); checkSelectionReady();
 });
-wireAutocomplete("destInput","destAuto",(r)=>{
-  state.destination = r; updateGlobePoints(); checkSelectionReady();
+
+const MAX_STOPS = 5;
+function renderStopsEditor(){
+  const editor = document.getElementById("stopsEditor");
+  if(!state.stops.length) state.stops.push(null);
+  editor.innerHTML = state.stops.map((stop,i)=>`
+    <div class="stop-row" data-idx="${i}">
+      <div class="field">
+        <label>Stop ${i+1}</label>
+        <input type="text" class="stop-input" placeholder="Enter city or country name" autocomplete="off" value="${stop ? escapeHtml(stop.name) : ""}">
+        <div class="autocomplete stop-auto"></div>
+      </div>
+      <div class="stop-row-controls">
+        <button type="button" class="icon-btn stop-up" title="Move up" ${i===0 ? "disabled" : ""}>↑</button>
+        <button type="button" class="icon-btn stop-down" title="Move down" ${i===state.stops.length-1 ? "disabled" : ""}>↓</button>
+        <button type="button" class="icon-btn remove stop-remove" title="Remove stop" ${state.stops.length===1 ? "disabled" : ""}>×</button>
+      </div>
+    </div>`).join("");
+
+  editor.querySelectorAll(".stop-row").forEach(row=>{
+    const idx = Number(row.dataset.idx);
+    const input = row.querySelector(".stop-input");
+    const auto = row.querySelector(".stop-auto");
+    attachAutocomplete(input, auto, (r)=>{
+      state.stops[idx] = r;
+      updateGlobePoints();
+      checkSelectionReady();
+    });
+    row.querySelector(".stop-up").onclick = ()=>{
+      if(idx===0) return;
+      [state.stops[idx-1], state.stops[idx]] = [state.stops[idx], state.stops[idx-1]];
+      renderStopsEditor(); updateGlobePoints(); checkSelectionReady();
+    };
+    row.querySelector(".stop-down").onclick = ()=>{
+      if(idx===state.stops.length-1) return;
+      [state.stops[idx+1], state.stops[idx]] = [state.stops[idx], state.stops[idx+1]];
+      renderStopsEditor(); updateGlobePoints(); checkSelectionReady();
+    };
+    row.querySelector(".stop-remove").onclick = ()=>{
+      state.stops.splice(idx,1);
+      renderStopsEditor(); updateGlobePoints(); checkSelectionReady();
+    };
+  });
+  document.getElementById("addStopBtn").disabled = state.stops.length >= MAX_STOPS;
+}
+document.getElementById("addStopBtn").onclick = ()=>{
+  if(state.stops.length >= MAX_STOPS) return;
+  state.stops.push(null);
+  renderStopsEditor();
+};
+renderStopsEditor();
+
+const optimizeToggleEl = document.getElementById("optimizeToggle");
+function setOptimizeOrder(value){
+  state.optimizeOrder = value;
+  optimizeToggleEl.classList.toggle("active", value);
+  optimizeToggleEl.setAttribute("aria-checked", String(value));
+}
+optimizeToggleEl.addEventListener("click", ()=> setOptimizeOrder(!state.optimizeOrder));
+optimizeToggleEl.addEventListener("keydown", (e)=>{
+  if(e.key===" " || e.key==="Enter"){ e.preventDefault(); setOptimizeOrder(!state.optimizeOrder); }
 });
+
 function checkSelectionReady(){
-  document.getElementById("globeNext").disabled = !(state.origin && state.destination);
+  const hasStop = state.stops.some(s=>s);
+  document.getElementById("globeNext").disabled = !(state.origin && hasStop);
 }
 
 /* ============================================================
@@ -1189,14 +1339,21 @@ async function startAnalysis(){
   const errEl = document.getElementById("loadingError");
   errEl.innerHTML = "";
   try{
-    statusEl.textContent = "Fetching real weather data…";
-    state.weather = await fetchWeather();
+    state.stops = state.stops.filter(s=>s);
 
-    statusEl.textContent = "AI is scanning flights, hotels & attractions…";
+    statusEl.textContent = "Fetching real weather data…";
+    const weatherResults = await Promise.all(state.stops.map(stop=>fetchWeather(stop)));
+    state.weatherByStop = state.stops.map((stop,i)=>({ stop, weather: weatherResults[i] }));
+
+    statusEl.textContent = "AI is mapping the route, flights, hotels & attractions…";
     state.brief = await fetchBrief();
+    // fetchBrief may have reordered state.stops — keep weatherByStop in sync
+    state.weatherByStop = state.stops.map(stop=>
+      state.weatherByStop.find(w=>w.stop.name===stop.name) || { stop, weather: null }
+    );
 
     statusEl.textContent = "Finding attraction photos…";
-    await attachAttractionImages(state.brief.attractions);
+    await attachAttractionImages(state.brief.stops);
 
     statusEl.textContent = "Almost there…";
     renderResults();
@@ -1207,8 +1364,7 @@ async function startAnalysis(){
   }
 }
 
-async function fetchWeather(){
-  const dest = state.destination;
+async function fetchWeather(dest){
   const today = new Date(); today.setHours(0,0,0,0);
   const start = new Date(state.startDate);
   const end = new Date(state.endDate);
@@ -1241,31 +1397,52 @@ async function fetchWeather(){
   }
 }
 
-async function fetchBrief(){
-  const w = state.weather;
+function averageWeatherLine(entry){
+  const w = entry?.weather;
   const avgMax = w?.data?.temperature_2m_max ? (w.data.temperature_2m_max.reduce((a,b)=>a+b,0)/w.data.temperature_2m_max.length).toFixed(1) : "unknown";
   const avgMin = w?.data?.temperature_2m_min ? (w.data.temperature_2m_min.reduce((a,b)=>a+b,0)/w.data.temperature_2m_min.length).toFixed(1) : "unknown";
+  const source = w?.type==="seasonal-estimate" ? "estimated from last year, beyond the 16-day forecast window" : "live forecast";
+  return `${entry.stop.name}: avg high/low ${avgMax}°C / ${avgMin}°C (${source})`;
+}
 
-  const system = `You are a travel planning assistant. Always respond with ONLY valid JSON, no prose, no markdown fences, matching exactly this schema:
+async function fetchBrief(){
+  const stopNames = state.stops.map(s=>s.name);
+  const weatherLines = state.weatherByStop.map(averageWeatherLine).join("\n");
+
+  const system = `You are a travel planning assistant helping plan a multi-city trip. Always respond with ONLY valid JSON, no prose, no markdown fences, matching exactly this schema:
 {
-  "weather_summary": "1-2 sentence human readable summary of expected weather",
-  "flights": [{"airline":"", "route":"", "price_estimate_usd":0, "notes":"", "deal_rating":"Great deal|Fair price|Pricey"}],
-  "hotels": [{"name":"", "area":"", "price_per_night_usd":0, "notes":"", "deal_rating":"Great deal|Fair price|Pricey"}],
-  "attractions": [{"name":"", "why":"", "booking_required":false}],
+  "order": ["Stop name 1","Stop name 2"],
+  "order_reason": "one short sentence explaining the routing choice, or an empty string if the order wasn't changed",
+  "legs": [{"from":"", "to":"", "flights":[{"airline":"","route":"","price_estimate_usd":0,"notes":"","deal_rating":"Great deal|Fair price|Pricey"}]}],
+  "stops": [{"name":"", "weather_summary":"", "attractions":[{"name":"","why":"","booking_required":false}], "hotels":[{"name":"","area":"","price_per_night_usd":0,"notes":"","deal_rating":"Great deal|Fair price|Pricey"}]}],
   "packing": ["item1","item2"]
 }
-${state.mode==="existing" ? 'The traveler already booked flights and hotel, so return empty arrays for "flights" and "hotels".' : "Suggest 3 realistic flight options and 3 realistic hotel options — these are AI estimates, not live bookings, so keep pricing plausible for the route/city rather than exact. For deal_rating, judge each price against typical fares/rates for that route and city (\"Great deal\" = notably below typical, \"Fair price\" = around typical, \"Pricey\" = notably above typical)."}
-Pricing rule: each flight price_estimate_usd is a ${state.tripType==="oneway" ? "one-way" : "round-trip"} estimate for ONE traveler only. Each hotel price_per_night_usd is for ONE room for ONE night only.
-Include 6-8 attractions and 8-12 packing items tailored to the weather and destination. Every value must be written only in clear English using Latin characters. For each attraction, set booking_required to true only when visitors normally need to buy a ticket or reserve a time slot in advance.`;
+"order" MUST contain exactly these ${stopNames.length} stop name(s), each exactly once, spelled exactly as given: ${stopNames.join(", ")}.
+${state.optimizeOrder
+    ? "Reorder them into the most time/travel-efficient visiting sequence starting from the origin — minimize backtracking and total distance travelled between consecutive stops. Set order_reason to a short justification of the routing."
+    : "Keep them in exactly the order given (the traveler chose this order deliberately). Set order_reason to an empty string."}
+"legs" must have exactly one entry per consecutive pair in your final order: origin→first stop, then stop→stop for each following pair${state.tripType==="roundtrip" ? ", plus one final leg from the last stop back to the origin" : ""}. ${state.mode==="existing" ? 'The traveler already booked all flights — return an empty "flights" array for every leg.' : "For each leg suggest 3 realistic flight options — AI estimates, not live bookings, so keep pricing plausible for that route rather than exact."}
+"stops" must have exactly one entry per stop name in "order" (name field matching exactly). ${state.mode==="existing" ? 'The traveler already booked all hotels — return an empty "hotels" array for every stop.' : "For each stop suggest 3 realistic hotel options in that city."}
+Pricing rule: each flight price_estimate_usd is a one-way estimate for ONE traveler on that leg only. Each hotel price_per_night_usd is for ONE room for ONE night only in that city. For deal_rating, judge each price against typical fares/rates for that route/city (\"Great deal\" = notably below typical, \"Fair price\" = around typical, \"Pricey\" = notably above typical).
+For each stop include 5-7 attractions tailored to that city's climate, and a 1-2 sentence weather_summary for that stop. Set booking_required to true only when visitors normally need to buy a ticket or reserve a time slot in advance.
+Combine everything into ONE shared "packing" list of 8-12 items covering all stops/climates (don't repeat per stop). Every value must be written only in clear English using Latin characters.`;
 
   const user = `Trip details:
 - Origin: ${state.origin.name}
-- Destination: ${state.destination.name}
+- Stops (in the order the traveler entered them): ${stopNames.join(", ")}
+- Trip type: ${state.tripType==="oneway" ? "one-way" : "round trip (final leg returns to the origin)"}
 - Dates: ${state.startDate} to ${state.endDate}
-- Average expected high/low temp: ${avgMax}°C / ${avgMin}°C (${w.type==="seasonal-estimate" ? "estimated from last year's data for these dates, since it's beyond the 16-day forecast window" : "live forecast"})
+- Per-stop expected weather:
+${weatherLines}
 Respond with JSON only.`;
 
-  return await callAIJson(system, user);
+  const data = await callAIJson(system, user, Math.min(8000, 2200 + state.stops.length*1400));
+
+  const byName = new Map(state.stops.map(s=>[s.name, s]));
+  const orderedStops = (Array.isArray(data.order) ? data.order : []).map(name=>byName.get(name)).filter(Boolean);
+  if(orderedStops.length === state.stops.length) state.stops = orderedStops;
+
+  return data;
 }
 
 /* ============================================================
@@ -1286,10 +1463,12 @@ async function fetchWikiImage(query){
   }
 }
 
-async function attachAttractionImages(attractions){
-  const cityHint = state.destination.name.split(",")[0];
-  await Promise.all(attractions.map(async (a)=>{
-    a.image = await fetchWikiImage(`${a.name} ${cityHint}`);
+async function attachAttractionImages(briefStops){
+  await Promise.all((briefStops||[]).map(async (stop)=>{
+    const cityHint = stop.name.split(",")[0];
+    await Promise.all((stop.attractions||[]).map(async (a)=>{
+      a.image = await fetchWikiImage(`${a.name} ${cityHint}`);
+    }));
   }));
 }
 
@@ -1349,8 +1528,8 @@ function weatherCategory(code){
 function weatherStageHTML(cat){
   return { clear:CLEAR_SVG, cloudy:CLOUDY_SVG, rain:RAIN_SVG, snow:SNOW_SVG, thunder:THUNDER_SVG }[cat] || CLOUDY_SVG;
 }
-function computeWeatherStats(){
-  const d = state.weather.data;
+function computeWeatherStats(weather){
+  const d = weather.data;
   const highs = d.temperature_2m_max || [], lows = d.temperature_2m_min || [];
   const avgHigh = Math.round(highs.reduce((a,b)=>a+b,0) / (highs.length||1));
   const avgLow = Math.round(lows.reduce((a,b)=>a+b,0) / (lows.length||1));
@@ -1402,35 +1581,46 @@ function needsAttractionBooking(attraction){
   return /museum|gallery|palace|castle|tower|observatory|aquarium|zoo|theme park|show|tour|cathedral|temple|historic site/i.test(`${attraction.name || ""} ${attraction.why || ""}`);
 }
 
-function buildAttractionBookingUrl(attractionName){
-  const city = state.destination?.name?.split(",")[0] || "";
-  return `https://www.google.com/search?q=${encodeURIComponent(`${attractionName} ${city} tickets booking`)}`;
+function buildAttractionBookingUrl(attractionName, city){
+  return `https://www.google.com/search?q=${encodeURIComponent(`${attractionName} ${city||""} tickets booking`)}`;
 }
 
 function renderResults(){
   const b = state.brief;
   const tripTypeLabel = state.tripType==="oneway" ? "One-way" : "Round trip";
+  const routeStops = [state.origin, ...state.stops];
+  if(state.tripType==="roundtrip") routeStops.push(state.origin);
   document.getElementById("resultsSub").textContent =
-    `${state.origin.name} → ${state.destination.name} · ${state.startDate} to ${state.endDate} · ${tripTypeLabel}`;
+    `${routeStops.map(s=>s.name).join(" → ")} · ${state.startDate} to ${state.endDate} · ${tripTypeLabel}`;
   const flightsBadge = document.getElementById("flightsTripTypeBadge");
   if(flightsBadge) flightsBadge.textContent = tripTypeLabel;
 
-  const stats = computeWeatherStats();
-  document.getElementById("weatherSummary").innerHTML = `
-    <div class="weather-hero">
-      <div class="weather-stage">${weatherStageHTML(stats.category)}</div>
-      <div class="weather-info">
-        <div class="temp-big">${stats.avgHigh}°<span class="temp-lo">/${stats.avgLow}°</span></div>
-        <p class="weather-desc">${b.weather_summary}</p>
-        ${stats.avgRain!==null ? `<div class="weather-meta"><span>${DROP_ICON}${stats.avgRain}% chance of rain</span></div>` : ""}
-      </div>
-    </div>`;
+  const orderNoteEl = document.getElementById("routeOrderNote");
+  if(orderNoteEl) orderNoteEl.textContent = b.order_reason ? `Route: ${b.order_reason}` : "";
 
-  if(b.flights?.length){
+  document.getElementById("weatherSummary").innerHTML = (b.stops||[]).map((stopBrief, i)=>{
+    const weather = state.weatherByStop[i]?.weather;
+    const stats = weather ? computeWeatherStats(weather) : null;
+    return `
+    <div class="stop-block">
+      <div class="stop-subhead">${escapeHtml(stopBrief.name)}</div>
+      ${stats ? `
+      <div class="weather-hero">
+        <div class="weather-stage">${weatherStageHTML(stats.category)}</div>
+        <div class="weather-info">
+          <div class="temp-big">${stats.avgHigh}°<span class="temp-lo">/${stats.avgLow}°</span></div>
+          <p class="weather-desc">${escapeHtml(stopBrief.weather_summary||"")}</p>
+          ${stats.avgRain!==null ? `<div class="weather-meta"><span>${DROP_ICON}${stats.avgRain}% chance of rain</span></div>` : ""}
+        </div>
+      </div>` : `<p class="weather-desc">${escapeHtml(stopBrief.weather_summary||"Weather data unavailable.")}</p>`}
+    </div>`;
+  }).join("");
+
+  if((b.legs||[]).some(l=>l.flights?.length)){
     document.getElementById("flightsCard").style.display = "block";
     renderFlights();
   }
-  if(b.hotels?.length){
+  if((b.stops||[]).some(s=>s.hotels?.length)){
     document.getElementById("hotelsCard").style.display = "block";
     renderHotels();
   }
@@ -1444,17 +1634,24 @@ function renderResults(){
     </label>`).join("")}</div>`;
 
   const LANDMARK_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;"><path d="M3 20h18"/><path d="M6 20V10l3-4 3 4v10"/><path d="M13 20v-7l3-3 3 3v7"/></svg>`;
-  document.getElementById("attractionsCard").innerHTML = `<div class="attractions-grid">${b.attractions.map(a=>`
-    <div class="attraction-card">
-      ${a.image ? `<img class="attraction-img" src="${a.image}" alt="${escapeHtml(a.name)}" loading="lazy">` : `<div class="attraction-img-fallback">${LANDMARK_ICON}</div>`}
-      <div class="attraction-body">
-        <b>${escapeHtml(a.name)}</b><p>${escapeHtml(a.why)}</p>
-        <div class="attraction-action" style="display:flex; flex-wrap:wrap; gap:12px;">
-          <a class="trust-link" href="${buildMapSearchUrl(a.name)}" target="_blank" rel="noopener noreferrer">${PIN_ICON} Open in Google Maps</a>
-          ${needsAttractionBooking(a) ? `<a class="trust-link" href="${buildAttractionBookingUrl(a.name)}" target="_blank" rel="noopener noreferrer">Check tickets & booking ${EXTERNAL_ICON}</a>` : ""}
-        </div>
-      </div>
-    </div>`).join("")}</div>`;
+  document.getElementById("attractionsCard").innerHTML = (b.stops||[]).map(stopBrief=>{
+    const city = stopBrief.name.split(",")[0];
+    return `
+    <div class="stop-block">
+      <div class="stop-subhead">${escapeHtml(stopBrief.name)}</div>
+      <div class="attractions-grid">${(stopBrief.attractions||[]).map(a=>`
+        <div class="attraction-card">
+          ${a.image ? `<img class="attraction-img" src="${a.image}" alt="${escapeHtml(a.name)}" loading="lazy">` : `<div class="attraction-img-fallback">${LANDMARK_ICON}</div>`}
+          <div class="attraction-body">
+            <b>${escapeHtml(a.name)}</b><p>${escapeHtml(a.why)}</p>
+            <div class="attraction-action" style="display:flex; flex-wrap:wrap; gap:12px;">
+              <a class="trust-link" href="${buildMapSearchUrl(a.name, undefined, undefined, city)}" target="_blank" rel="noopener noreferrer">${PIN_ICON} Open in Google Maps</a>
+              ${needsAttractionBooking(a) ? `<a class="trust-link" href="${buildAttractionBookingUrl(a.name, city)}" target="_blank" rel="noopener noreferrer">Check tickets & booking ${EXTERNAL_ICON}</a>` : ""}
+            </div>
+          </div>
+        </div>`).join("")}</div>
+    </div>`;
+  }).join("");
 }
 
 /* ============================================================
@@ -1466,25 +1663,21 @@ function renderResults(){
 const EXTERNAL_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 const PIN_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>`;
 
-function buildMapSearchUrl(placeName, lat, lon){
+function buildMapSearchUrl(placeName, lat, lon, cityHint){
   // prefer exact coordinates when available — a text search on an event's name/description
   // ("Breakfast", "Free time") often doesn't resolve to the real place being visited
   if(Number.isFinite(lat) && Number.isFinite(lon) && (lat !== 0 || lon !== 0)){
     return `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
   }
-  const city = state.destination?.name?.split(",")[0] || "";
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${placeName} ${city}`)}`;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${placeName} ${cityHint||""}`)}`;
 }
 const SHIELD_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5z"/><polyline points="9 12 11 14 15 10"/></svg>`;
 
-function buildFlightSearchUrl(){
-  const q = state.tripType==="oneway"
-    ? `One-way flights to ${state.destination.name.split(",")[0]} from ${state.origin.name.split(",")[0]} on ${state.startDate}`
-    : `Flights to ${state.destination.name.split(",")[0]} from ${state.origin.name.split(",")[0]} on ${state.startDate} through ${state.endDate}`;
+function buildFlightSearchUrl(fromName, toName){
+  const q = `Flights from ${fromName.split(",")[0]} to ${toName.split(",")[0]} around ${state.startDate}`;
   return `https://www.google.com/travel/flights?q=${encodeURIComponent(q)}`;
 }
-function buildHotelSearchUrl(hotelName){
-  const city = state.destination.name.split(",")[0];
+function buildHotelSearchUrl(hotelName, city){
   const ss = hotelName ? `${hotelName} ${city}` : city;
   return `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(ss)}&checkin=${state.startDate}&checkout=${state.endDate}`;
 }
@@ -1503,40 +1696,55 @@ function toggleSort(kind){
 }
 
 function renderFlights(){
-  const items = [...state.brief.flights].sort((a,b)=>
-    sortState.flights==="asc" ? a.price_estimate_usd - b.price_estimate_usd : b.price_estimate_usd - a.price_estimate_usd
-  );
-  const searchUrl = buildFlightSearchUrl();
-  document.getElementById("flightsList").innerHTML = items.map(f=>`
-    <div class="option-row">
-      <div class="option-top">
-        <span><b>${f.airline}</b> — ${f.route}<br><small style="color:var(--text-dim)">${f.notes||""}</small></span>
-        <span class="price">$${f.price_estimate_usd}</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        ${f.deal_rating ? `<span class="deal-badge ${dealBadgeClass(f.deal_rating)}">${f.deal_rating}</span>` : ""}
-        <a class="trust-link" href="${searchUrl}" target="_blank" rel="noopener">${SHIELD_ICON} Compare real prices on Google Flights ${EXTERNAL_ICON}</a>
-      </div>
-    </div>`
-  ).join("");
+  const legs = state.brief.legs || [];
+  document.getElementById("flightsList").innerHTML = legs.map(leg=>{
+    const items = [...(leg.flights||[])].sort((a,b)=>
+      sortState.flights==="asc" ? a.price_estimate_usd - b.price_estimate_usd : b.price_estimate_usd - a.price_estimate_usd
+    );
+    if(!items.length) return "";
+    const searchUrl = buildFlightSearchUrl(leg.from, leg.to);
+    return `
+    <div class="leg-block">
+      <div class="leg-subhead">${escapeHtml(leg.from)} → ${escapeHtml(leg.to)}</div>
+      ${items.map(f=>`
+        <div class="option-row">
+          <div class="option-top">
+            <span><b>${escapeHtml(f.airline)}</b> — ${escapeHtml(f.route)}<br><small style="color:var(--text-dim)">${escapeHtml(f.notes||"")}</small></span>
+            <span class="price">$${f.price_estimate_usd}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            ${f.deal_rating ? `<span class="deal-badge ${dealBadgeClass(f.deal_rating)}">${f.deal_rating}</span>` : ""}
+            <a class="trust-link" href="${searchUrl}" target="_blank" rel="noopener">${SHIELD_ICON} Compare real prices on Google Flights ${EXTERNAL_ICON}</a>
+          </div>
+        </div>`).join("")}
+    </div>`;
+  }).join("");
 }
 
 function renderHotels(){
-  const items = [...state.brief.hotels].sort((a,b)=>
-    sortState.hotels==="asc" ? a.price_per_night_usd - b.price_per_night_usd : b.price_per_night_usd - a.price_per_night_usd
-  );
-  document.getElementById("hotelsList").innerHTML = items.map(h=>`
-    <div class="option-row">
-      <div class="option-top">
-        <span><b>${h.name}</b> — ${h.area}<br><small style="color:var(--text-dim)">${h.notes||""}</small></span>
-        <span class="price">$${h.price_per_night_usd}/night</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        ${h.deal_rating ? `<span class="deal-badge ${dealBadgeClass(h.deal_rating)}">${h.deal_rating}</span>` : ""}
-        <a class="trust-link" href="${buildHotelSearchUrl(h.name)}" target="_blank" rel="noopener">${SHIELD_ICON} Check real rates on Booking.com ${EXTERNAL_ICON}</a>
-      </div>
-    </div>`
-  ).join("");
+  const stops = state.brief.stops || [];
+  document.getElementById("hotelsList").innerHTML = stops.map(stopBrief=>{
+    const items = [...(stopBrief.hotels||[])].sort((a,b)=>
+      sortState.hotels==="asc" ? a.price_per_night_usd - b.price_per_night_usd : b.price_per_night_usd - a.price_per_night_usd
+    );
+    if(!items.length) return "";
+    const city = stopBrief.name.split(",")[0];
+    return `
+    <div class="leg-block">
+      <div class="leg-subhead">${escapeHtml(stopBrief.name)}</div>
+      ${items.map(h=>`
+        <div class="option-row">
+          <div class="option-top">
+            <span><b>${escapeHtml(h.name)}</b> — ${escapeHtml(h.area)}<br><small style="color:var(--text-dim)">${escapeHtml(h.notes||"")}</small></span>
+            <span class="price">$${h.price_per_night_usd}/night</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            ${h.deal_rating ? `<span class="deal-badge ${dealBadgeClass(h.deal_rating)}">${h.deal_rating}</span>` : ""}
+            <a class="trust-link" href="${buildHotelSearchUrl(h.name, city)}" target="_blank" rel="noopener">${SHIELD_ICON} Check real rates on Booking.com ${EXTERNAL_ICON}</a>
+          </div>
+        </div>`).join("")}
+    </div>`;
+  }).join("");
 }
 
 /* ============================================================
@@ -1551,6 +1759,19 @@ function averageOfferPrice(items, field){
   return values.length ? Math.round(values.reduce((sum, value)=>sum + value, 0) / values.length) : 0;
 }
 
+// Each leg is a separate ticket, so the per-traveler flight cost is a SUM across legs
+// (not an average) — one leg's average fare, plus the next leg's, and so on.
+function totalFlightsPerTraveler(){
+  return (state.brief?.legs || []).reduce((sum, leg)=> sum + averageOfferPrice(leg.flights, "price_estimate_usd"), 0);
+}
+// We don't track how many nights are spent at each stop, so approximate hotel cost by
+// averaging nightly rates across all stops and applying it to the whole trip's nights —
+// equivalent to assuming nights are split evenly across stops.
+function averageHotelPerRoomNight(){
+  const allHotels = (state.brief?.stops || []).flatMap(s=>s.hotels || []);
+  return averageOfferPrice(allHotels, "price_per_night_usd");
+}
+
 function buildValidatedCostEstimate(rawEstimate, tripDays){
   const travelers = state.prefs.travelers;
   const nights = Math.max(1, tripDays - 1);
@@ -1559,8 +1780,8 @@ function buildValidatedCostEstimate(rawEstimate, tripDays){
   const breakdown = Object.fromEntries(COST_CATEGORIES.map(key=>[
     key, Math.max(0, Math.round(Number(rawBreakdown[key]) || 0))
   ]));
-  const flightPerTraveler = averageOfferPrice(state.brief?.flights, "price_estimate_usd");
-  const hotelPerRoomNight = averageOfferPrice(state.brief?.hotels, "price_per_night_usd");
+  const flightPerTraveler = totalFlightsPerTraveler();
+  const hotelPerRoomNight = averageHotelPerRoomNight();
 
   if(state.mode !== "existing"){
     if(flightPerTraveler) breakdown.flights = Math.max(breakdown.flights, flightPerTraveler * travelers);
@@ -1587,8 +1808,8 @@ function estimateMinimumBudget(){
   const rooms = Math.max(1, Math.ceil(travelers / 2));
   let total = travelers * tripDays * 35 + travelers * tripDays * 8; // food + local transport floors
   if(state.mode !== "existing"){
-    total += averageOfferPrice(state.brief?.flights, "price_estimate_usd") * travelers;
-    total += averageOfferPrice(state.brief?.hotels, "price_per_night_usd") * rooms * nights;
+    total += totalFlightsPerTraveler() * travelers;
+    total += averageHotelPerRoomNight() * rooms * nights;
   }
   return Math.max(100, Math.round(total / 100) * 100);
 }
@@ -1622,8 +1843,14 @@ async function generateItinerary(){
   state.prefs.age = Number(document.getElementById("prefAge").value);
   state.prefs.pace = document.getElementById("prefPace").value;
   state.prefs.interests = [...document.querySelectorAll("#interestChips .chip.active")].map(c=>c.dataset.v);
+  state.prefs.arrivalTime = document.getElementById("prefArrivalTime").value;
+  state.prefs.departureTime = document.getElementById("prefDepartureTime").value;
+  state.prefs.checkinTime = document.getElementById("prefCheckinTime").value;
+  state.prefs.checkoutTime = document.getElementById("prefCheckoutTime").value;
 
-  document.getElementById("timelineLoading").style.display = "flex";
+  const timelineLoadingEl = document.getElementById("timelineLoading");
+  timelineLoadingEl.style.display = "flex";
+  timelineLoadingEl.scrollIntoView({ behavior:"smooth", block:"center" });
   document.getElementById("timelineOutput").innerHTML = "";
   document.getElementById("costSummary").innerHTML = "";
   document.getElementById("chatMessages").innerHTML = "";
@@ -1631,17 +1858,23 @@ async function generateItinerary(){
   document.getElementById("mapNext").disabled = true;
 
   const dateList = enumerateDates(state.startDate, state.endDate);
-  const flightPerTraveler = averageOfferPrice(state.brief?.flights, "price_estimate_usd");
-  const hotelPerRoomNight = averageOfferPrice(state.brief?.hotels, "price_per_night_usd");
+  const flightPerTraveler = totalFlightsPerTraveler();
+  const hotelPerRoomNight = averageHotelPerRoomNight();
   const nights = Math.max(1, dateList.length - 1);
   const rooms = Math.max(1, Math.ceil(state.prefs.travelers / 2));
+  const routeStops = [state.origin, ...state.stops];
+  if(state.tripType==="roundtrip") routeStops.push(state.origin);
+  const routeLabel = routeStops.map(s=>s.name).join(" → ");
+  const stopNamesInOrder = state.stops.map(s=>s.name);
+  const attractionsByStop = (state.brief.stops||[]).map(s=>`${s.name}: ${(s.attractions||[]).map(a=>a.name).join(", ")}`).join("\n");
 
-  const system = `You are a travel schedule planner. Respond with ONLY valid JSON matching this schema, no prose:
+  const system = `You are a travel schedule planner for a multi-city trip. Respond with ONLY valid JSON matching this schema, no prose:
 {
   "days": [
     {
       "day": 1,
       "date": "YYYY-MM-DD",
+      "stop": "city name from the stop list",
       "title": "short theme for the day",
       "activities": [
         {"time":"09:00","title":"","description":"","lat":0.0,"lon":0.0}
@@ -1652,22 +1885,29 @@ async function generateItinerary(){
   "cost_breakdown": {"flights":0,"hotel":0,"food":0,"activities":0,"local_transport":0,"misc":0}
 }
 You MUST include exactly ${dateList.length} day objects, one for each of these dates in this exact order: ${dateList.join(", ")}. Do not skip, merge, or omit any date.
-Every activity must include a realistic lat/lon near the destination coordinates given. Tailor the plan to the group's budget, average age and interests, and match the requested pace (relaxed = 2-3 activities/day, balanced = 3-4, packed = 5-6).
-Also estimate the total trip cost in USD for the whole group of ${state.prefs.travelers} traveler(s) across the entire ${dateList.length}-day trip, broken down into the categories shown in cost_breakdown. Work out the arithmetic before answering: flights are round-trip per traveler multiplied by traveler count, hotels are per room per night multiplied by ${rooms} room(s) and ${nights} night(s), and food/local transport are for the entire group. estimated_total_cost_usd must equal the exact sum of cost_breakdown. Keep numbers realistic for the destination and group size.`;
+Each day's "stop" MUST be one of these city names, spelled exactly: ${stopNamesInOrder.join(", ")}. The cities MUST appear across the days in this exact visiting order — once a day moves on to the next city in the list, no later day may go back to an earlier one. Every city in the list must get at least one day. Split the available days across the cities based on how much there is to do in each (more attractions listed below suggests more days there), rather than splitting evenly by default.
+Every activity must include a realistic lat/lon near that day's city coordinates. Tailor the plan to the group's budget, average age and interests, and match the requested pace (relaxed = 2-3 activities/day, balanced = 3-4, packed = 5-6).
+Also estimate the total trip cost in USD for the whole group of ${state.prefs.travelers} traveler(s) across the entire ${dateList.length}-day, ${stopNamesInOrder.length}-city trip, broken down into the categories shown in cost_breakdown. Work out the arithmetic before answering: flights are the sum of every leg's fare (one leg per city-to-city hop${state.tripType==="roundtrip" ? ", plus the final leg back to the origin" : ""}) multiplied by traveler count, hotels are per room per night multiplied by ${rooms} room(s) and ${nights} night(s) total across all stops, and food/local transport are for the entire group. estimated_total_cost_usd must equal the exact sum of cost_breakdown. Keep numbers realistic for the destinations and group size.
+If given an outbound arrival time, the first day's schedule (in the first city) must start no earlier than that time (plus reasonable transit to the first activity) — do not invent an earlier arrival. If given a hotel check-in time, don't schedule the hotel drop-off/check-in before that time on day 1. If given a return departure time, the last day's schedule (in the last city) must end early enough to reach the airport before that time — do not invent a later departure. If given a hotel check-out time, don't schedule activities that assume the hotel room is still available after that time on the last day. These times apply ONLY to the very first and very last day of the whole trip, never to the transitions between cities in between. If any of these times are not given, use realistic assumptions and do not mention that they were missing.`;
 
-  const user = `Destination: ${state.destination.name} (lat ${state.destination.lat}, lon ${state.destination.lon})
+  const user = `Route: ${routeLabel}
 Dates: ${state.startDate} to ${state.endDate} (${dateList.length} days)
 Group size: ${state.prefs.travelers} traveler(s), average age ${state.prefs.age}
 Total budget: $${state.prefs.budget}
 Pace: ${state.prefs.pace}
 Interests: ${state.prefs.interests.join(", ") || "general sightseeing"}
-Known attractions to consider: ${state.brief.attractions.map(a=>a.name).join(", ")}
-Suggested flight average: $${flightPerTraveler || "unknown"} per traveler, round trip.
+Known attractions to consider per city:
+${attractionsByStop}
+Suggested total flight cost: $${flightPerTraveler || "unknown"} per traveler, across all legs.
 Suggested hotel average: $${hotelPerRoomNight || "unknown"} per room per night.
+Outbound flight arrival time: ${state.prefs.arrivalTime || "not specified"}
+Return flight departure time: ${state.prefs.departureTime || "not specified"}
+Hotel check-in time: ${state.prefs.checkinTime || "not specified"}
+Hotel check-out time: ${state.prefs.checkoutTime || "not specified"}
 Respond with JSON only.`;
 
   try{
-    const data = await callAIJson(system, user, 4000);
+    const data = await callAIJson(system, user, Math.min(8000, 4000 + state.stops.length*800));
     state.itinerary = data.days;
     state.costEstimate = buildValidatedCostEstimate(data, dateList.length);
     renderTimeline();
@@ -1682,18 +1922,18 @@ Respond with JSON only.`;
 
 function renderTimeline(){
   const tabs = state.itinerary.map((d,i)=>`
-    <button class="day-tab${i===0 ? " active" : ""}" data-day-index="${i}">Day ${d.day}</button>
+    <button class="day-tab${i===0 ? " active" : ""}" data-day-index="${i}">Day ${d.day}${d.stop ? ` · ${escapeHtml(d.stop.split(",")[0])}` : ""}</button>
   `).join("");
 
   const days = state.itinerary.map((d,i)=>`
     <div class="day-block${i===0 ? " active-day" : ""}" data-day-index="${i}">
-      <div class="day-title">Day ${d.day} — ${d.date} · ${d.title}</div>
+      <div class="day-title">Day ${d.day}${d.stop ? ` · ${escapeHtml(d.stop)}` : ""} — ${d.date} · ${d.title}</div>
       ${d.activities.map(a=>`
         <div class="activity">
           <div class="time">${a.time}</div>
           <div class="body">
             <b>${escapeHtml(a.title)}</b><p>${escapeHtml(a.description)}</p>
-            <a class="trust-link" href="${buildMapSearchUrl(a.title, a.lat, a.lon)}" target="_blank" rel="noopener noreferrer">${PIN_ICON} Open in Google Maps</a>
+            <a class="trust-link" href="${buildMapSearchUrl(a.title, a.lat, a.lon, d.stop)}" target="_blank" rel="noopener noreferrer">${PIN_ICON} Open in Google Maps</a>
           </div>
         </div>
       `).join("")}
@@ -1778,19 +2018,25 @@ async function sendChatMessage(){
   state.chatHistory.push({ role: "user", content: text });
   const thinkingEl = appendChatMessage("thinking", "Your co-pilot is updating the schedule…");
 
-  const system = `You are an AI trip-planning co-pilot chatting with a traveler about their existing schedule. Apply ONLY the changes they ask for and keep the rest of the schedule intact unless a change has knock-on effects (e.g. moving a whole day). Respond with ONLY valid JSON, no prose, matching exactly this schema:
+  const stopNamesInOrder = state.stops.map(s=>s.name);
+  const system = `You are an AI trip-planning co-pilot chatting with a traveler about their existing multi-city schedule. Apply ONLY the changes they ask for and keep the rest of the schedule intact unless a change has knock-on effects (e.g. moving a whole day). Respond with ONLY valid JSON, no prose, matching exactly this schema:
 {
   "reply": "one short friendly sentence confirming what you changed",
   "days": [
-    { "day":1, "date":"YYYY-MM-DD", "title":"", "activities":[{"time":"09:00","title":"","description":"","lat":0.0,"lon":0.0}] }
+    { "day":1, "date":"YYYY-MM-DD", "stop":"city name", "title":"", "activities":[{"time":"09:00","title":"","description":"","lat":0.0,"lon":0.0}] }
   ],
   "estimated_total_cost_usd": 0,
   "cost_breakdown": {"flights":0,"hotel":0,"food":0,"activities":0,"local_transport":0,"misc":0}
 }
-The "days" array must always cover the full trip from ${state.startDate} to ${state.endDate} — the same number of days as the current schedule below, unless the traveler explicitly asks to change the trip length.`;
+The "days" array must always cover the full trip from ${state.startDate} to ${state.endDate} — the same number of days as the current schedule below, unless the traveler explicitly asks to change the trip length. Each day's "stop" must stay one of these cities, in this visiting order, unless the traveler explicitly asks to reorder or change the route: ${stopNamesInOrder.join(", ")}.`;
 
-  const user = `Destination: ${state.destination.name} (lat ${state.destination.lat}, lon ${state.destination.lon})
+  const user = `Route: ${[state.origin.name, ...stopNamesInOrder].join(" → ")}${state.tripType==="roundtrip" ? ` → ${state.origin.name}` : ""}
 Group: ${state.prefs.travelers} traveler(s), average age ${state.prefs.age}, budget $${state.prefs.budget}
+Outbound flight arrival time: ${state.prefs.arrivalTime || "not specified"}
+Return flight departure time: ${state.prefs.departureTime || "not specified"}
+Hotel check-in time: ${state.prefs.checkinTime || "not specified"}
+Hotel check-out time: ${state.prefs.checkoutTime || "not specified"}
+(Keep day 1 and the last day consistent with these times unless the traveler's request below overrides them.)
 
 Current schedule (JSON):
 ${JSON.stringify({ days: state.itinerary, estimated_total_cost_usd: state.costEstimate?.total, cost_breakdown: state.costEstimate?.breakdown })}
@@ -1818,29 +2064,82 @@ Respond with the full updated schedule as JSON only.`;
 }
 
 /* ============================================================
-   TRIP MAP (Google Maps embed — no API key needed)
+   TRIP MAP (reuses the same 3D globe as the stop picker, now
+   drawing the full multi-city route instead of a single pin)
    ============================================================ */
-function renderMapScreen(){
-  const iframe = document.getElementById("mapPreviewFinal");
+let mapGlobeInstance = null;
+async function renderMapGlobe(){
+  const container = document.getElementById("mapGlobeViz");
+  try{
+    await ensureGlobeLib();
+    if(typeof Globe === "undefined") throw new Error("globe.gl failed to load from any CDN");
+    if(!mapGlobeInstance){
+      mapGlobeInstance = Globe()
+        (container)
+        .width(container.clientWidth)
+        .height(container.clientHeight)
+        .globeImageUrl("https://unpkg.com/three-globe@2.31.1/example/img/earth-blue-marble.jpg")
+        .bumpImageUrl("https://unpkg.com/three-globe@2.31.1/example/img/earth-topology.png")
+        .backgroundImageUrl("https://unpkg.com/three-globe@2.31.1/example/img/night-sky.png")
+        .backgroundColor("#01030c")
+        .atmosphereColor("#6fd8d2")
+        .atmosphereAltitude("0.28")
+        .pointColor(()=>"#F6DBA0")
+        .pointAltitude(0.02)
+        .pointRadius(0.45)
+        .arcColor(()=>["#5FE3DD","#EFC98A"])
+        .arcStroke(0.6)
+        .arcAltitude(ARC_ALTITUDE)
+        .arcAltitudeAutoScale(false)
+        .arcDashLength(0.4)
+        .arcDashGap(0.15)
+        .arcDashAnimateTime(1600);
+      mapGlobeInstance.controls().autoRotate = true;
+      mapGlobeInstance.controls().autoRotateSpeed = 0.4;
+      mapGlobeInstance.controls().enableZoom = true;
+      window.addEventListener("resize", ()=>{
+        if(!mapGlobeInstance) return;
+        mapGlobeInstance.width(container.clientWidth).height(container.clientHeight);
+      });
+    } else {
+      mapGlobeInstance.width(container.clientWidth).height(container.clientHeight);
+    }
+    const route = tripRoute();
+    mapGlobeInstance.pointsData(route.map(p=>({ lat:p.lat, lng:p.lon, label:p.name })));
+    const arcs = [];
+    for(let i=0;i<route.length-1;i++){
+      arcs.push({ startLat:route[i].lat, startLng:route[i].lon, endLat:route[i+1].lat, endLng:route[i+1].lon });
+    }
+    mapGlobeInstance.arcsData(arcs);
+    const mid = route[Math.floor((route.length-1)/2)];
+    if(mid) mapGlobeInstance.pointOfView({ lat:mid.lat, lng:mid.lon, altitude:2.2 }, 800);
+  }catch(err){
+    console.error("Map globe failed to initialize:", err);
+    container.innerHTML = `<div class="error-box" style="margin:20px;">3D map couldn't load (${err.message}). Check your internet connection — the stop list below still works.</div>`;
+  }
+}
+
+async function renderMapScreen(){
   const container = document.getElementById("stopsList");
-  if(!state.destination || !state.itinerary || !state.itinerary.length){
+  if(!state.stops.length || !state.itinerary || !state.itinerary.length){
     container.innerHTML = `<div class="error-box">No schedule yet — go back and generate one first.</div>`;
     return;
   }
-  const dest = state.destination;
-  iframe.src = `https://www.google.com/maps?q=${dest.lat},${dest.lon}&z=12&output=embed`;
+  await renderMapGlobe();
 
+  const stopsByName = new Map([state.origin, ...state.stops].map(s=>[s.name, s]));
   let n = 1;
   const cards = [];
   state.itinerary.forEach(day=>{
+    const stopMeta = stopsByName.get(day.stop);
     day.activities.forEach(a=>{
-      const lat = a.lat || dest.lat, lon = a.lon || dest.lon;
+      const lat = a.lat || stopMeta?.lat, lon = a.lon || stopMeta?.lon;
       const viewUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
       const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
       cards.push(`
         <div class="stop-card">
           <div class="stop-num">${n}</div>
-          <div class="stop-body"><b>${a.title}</b><p>Day ${day.day} · ${a.time} — ${a.description}</p></div>
+          <div class="stop-body"><b>${escapeHtml(a.title)}</b><p>${escapeHtml(day.stop||"")} · Day ${day.day} · ${a.time} — ${escapeHtml(a.description)}</p></div>
           <div class="stop-links"><a href="${viewUrl}" target="_blank" rel="noopener">View</a><a href="${dirUrl}" target="_blank" rel="noopener">Directions</a></div>
         </div>`);
       n++;
